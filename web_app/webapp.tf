@@ -8,22 +8,29 @@ resource "azurerm_windows_web_app" "paas" {
   
   site_config {
   scm_minimum_tls_version = 1.2
+  #always_on         = local.site_config.always_on
 
     application_stack {
       current_stack = "dotnet"
       dotnet_version = "v6.0"
-    
     }
-
   }
+
+    #connection_string {
+    #name  = "StorageAccount"
+    #type  = "Custom"
+    #value = azurerm_storage_account.website_log_storage.primary_connection_string
+  #}
 
     identity {
         type = "SystemAssigned"
       }
 
-  app_settings = {}
-}
-
+      app_settings = {
+      # "WEBSITE_RUN_FROM_PACKAGE":"https://st17df16d789ed0fb5.blob.core.windows.net/deploy"
+      
+      }
+  }
 resource "azurerm_storage_container" "deploy" {
   
   name                  = var.container_name
